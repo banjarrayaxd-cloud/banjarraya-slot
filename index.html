@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Banjar Raya Slot Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:black;color:white;text-align:center;padding:10px;}
+h2{color:gold;}
+#game{display:none;}
+input,button{padding:10px;margin:5px;font-size:16px;border-radius:5px;border:none;}
+button{background:red;color:white;font-weight:bold;}
+.reel{width:80px;height:80px;background:#000;border:3px solid gold;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:50px;margin:5px;}
+</style>
+</head>
+<body>
+
+<h2>🎰 BANJAR RAYA SLOT DEMO 🎰</h2>
+
+<div id="form">
+<h3>DAFTAR AKUN</h3>
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+<input id="hp" placeholder="No HP"><br>
+<button onclick="daftar()">MASUK</button>
+</div>
+
+<div id="game">
+<h3>Saldo: <span id="saldo">10000</span></h3>
+<div class="reel" id="r1">🍒</div>
+<div class="reel" id="r2">🍋</div>
+<div class="reel" id="r3">🔔</div><br>
+<button onclick="spin()">SPIN</button>
+</div>
+
+<script>
+function daftar(){
+ if(!user.value||!pass.value||!hp.value){alert("Isi data dulu");return;}
+ form.style.display="none"; game.style.display="block";
+}
+
+let simbol=["🍒","🍋","🔔","💎","🍉","7️⃣"];
+function spin(){
+ let s=parseInt(saldo.innerHTML); s-=50;
+ let i=setInterval(()=>{
+ r1.innerHTML=simbol[Math.random()*simbol.length|0];
+ r2.innerHTML=simbol[Math.random()*simbol.length|0];
+ r3.innerHTML=simbol[Math.random()*simbol.length|0];
+ },100);
+
+ setTimeout(()=>{
+ clearInterval(i);
+ if(r1.innerHTML==r2.innerHTML&&r2.innerHTML==r3.innerHTML){alert("JACKPOT!"); s+=5000;}
+ saldo.innerHTML=s;
+ },2000);
+}
+</script>
+
+</body>
+</html>
