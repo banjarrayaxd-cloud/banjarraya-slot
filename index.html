@@ -1,82 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Banjar Raya Slot Demo</title>
+<meta charset="UTF-8">
+<title>Banjar Raya Pragmatic Demo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
-html,body{
-  margin:0; padding:0;
-  width:100%; height:100%;
-  background:black;
-  font-family:Arial;
-  overflow:hidden;
-}
-#gameScreen{
-  width:100vw; height:100vh;
-  background:radial-gradient(circle,#111,#000);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  color:white;
-}
-#topBar{
-  position:absolute; top:0;
-  width:100%; text-align:center;
-  background:#000; padding:10px;
-  color:gold; font-size:18px;
-  border-bottom:2px solid gold;
-}
-#reels{
-  display:flex; gap:15px; margin-top:50px;
-}
-.reel{
-  width:90px; height:90px;
-  background:black;
-  border:4px solid gold;
-  border-radius:15px;
-  display:flex;
-  align-items:center; justify-content:center;
-  font-size:60px;
-  box-shadow:0 0 20px gold;
-}
-#spinBtn{
-  position:absolute; bottom:30px;
-  padding:15px 50px;
-  font-size:22px;
-  background:red; border:none;
-  border-radius:50px; color:white; font-weight:bold;
-  box-shadow:0 0 15px gold;
-}
-#bonus{
-  position:fixed; top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.9);
-  color:gold;
-  display:none; align-items:center; justify-content:center;
-  font-size:40px;
-}
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#111;font-family:Arial;color:white;}
+#gameScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100vw;height:100vh;background:radial-gradient(circle,#111,#000);}
+#topBar{position:absolute;top:0;width:100%;padding:12px;text-align:center;background:#000;border-bottom:3px solid gold;font-size:20px;color:gold;}
+#reels{display:flex;gap:20px;margin-top:80px;}
+.reel{width:100px;height:100px;background:black;border:4px solid gold;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:60px;box-shadow:0 0 20px gold;}
+#spinBtn{position:absolute;bottom:40px;padding:15px 60px;font-size:24px;background:red;border:none;border-radius:50px;color:white;font-weight:bold;box-shadow:0 0 20px gold;}
+#bonus{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);color:gold;display:none;align-items:center;justify-content:center;font-size:50px;text-align:center;}
 </style>
 </head>
-
 <body>
 
 <div id="gameScreen">
-
-<div id="topBar">💰 Saldo Demo: <span id="saldo">100000</span> Koin</div>
-
-<div id="reels">
-  <div class="reel" id="r1">🍒</div>
-  <div class="reel" id="r2">🍋</div>
-  <div class="reel" id="r3">🔔</div>
+  <div id="topBar">💰 Saldo Demo: <span id="saldo">100000</span></div>
+  <div id="reels">
+    <div class="reel" id="r1">🍒</div>
+    <div class="reel" id="r2">🍋</div>
+    <div class="reel" id="r3">🔔</div>
+  </div>
+  <button id="spinBtn" onclick="spin()">🎰 SPIN</button>
 </div>
 
-<button id="spinBtn" onclick="spin()">🎰 SPIN</button>
-
-</div>
-
-<div id="bonus">🎉 BONUS FREE SPIN 🎉</div>
+<div id="bonus">🎉 FREE SPIN BONUS! 🎉</div>
 
 <audio id="spinSound" src="https://www.soundjay.com/mechanical/slot-machine-1.mp3"></audio>
 <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
@@ -87,36 +37,36 @@ let simbol=["🍒","🍋","🔔","💎","7️⃣","⭐"];
 function randomSymbol(){ return simbol[Math.floor(Math.random()*simbol.length)]; }
 
 function spin(){
- let saldo=parseInt(saldo.innerHTML);
- saldo-=500;
- if(saldo<=0) saldo=100000;
+  let saldo=parseInt(document.getElementById("saldo").innerHTML);
+  saldo -= 500;
+  if(saldo<=0) saldo=100000;
 
- spinSound.play();
+  spinSound.play();
 
- let interval=setInterval(()=>{
-  r1.innerHTML=randomSymbol();
-  r2.innerHTML=randomSymbol();
-  r3.innerHTML=randomSymbol();
- },80);
+  let interval = setInterval(()=>{
+    r1.innerHTML=randomSymbol();
+    r2.innerHTML=randomSymbol();
+    r3.innerHTML=randomSymbol();
+  },80);
 
- setTimeout(()=>{
-  clearInterval(interval);
+  setTimeout(()=>{
+    clearInterval(interval);
 
-  // Jackpot
-  if(r1.innerHTML==r2.innerHTML && r2.innerHTML==r3.innerHTML){
-    winSound.play();
-    alert("🔥 JACKPOT BANJAR RAYA 🔥");
-    saldo+=50000;
-  }
+    // Jackpot
+    if(r1.innerHTML===r2.innerHTML && r2.innerHTML===r3.innerHTML){
+      winSound.play();
+      alert("🔥 JACKPOT! 🔥");
+      saldo += 50000;
+    }
 
-  // Bonus random
-  if(Math.random()<0.05){
-    bonus.style.display="flex";
-    setTimeout(()=>bonus.style.display="none",3000);
-  }
+    // Bonus random
+    if(Math.random()<0.05){
+      document.getElementById("bonus").style.display="flex";
+      setTimeout(()=>document.getElementById("bonus").style.display="none",3000);
+    }
 
-  document.getElementById("saldo").innerHTML=saldo;
- },2000);
+    document.getElementById("saldo").innerHTML=saldo;
+  },2000);
 }
 </script>
 
