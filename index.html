@@ -6,154 +6,115 @@
 
 <style>
 html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
+  margin:0; padding:0;
+  width:100%; height:100%;
   background:black;
   font-family:Arial;
-  color:white;
+  overflow:hidden;
 }
-
-/* FULL SCREEN GAME */
 #gameScreen{
-  width:100vw;
-  height:100vh;
+  width:100vw; height:100vh;
   background:radial-gradient(circle,#111,#000);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  color:white;
 }
-
-/* TOP BAR */
 #topBar{
-  position:absolute;
-  top:0;
-  width:100%;
-  background:#000;
-  padding:10px;
-  text-align:center;
-  color:gold;
-  font-size:18px;
+  position:absolute; top:0;
+  width:100%; text-align:center;
+  background:#000; padding:10px;
+  color:gold; font-size:18px;
   border-bottom:2px solid gold;
 }
-
-/* SLOT REELS */
 #reels{
-  display:flex;
-  gap:10px;
-  margin-top:50px;
+  display:flex; gap:15px; margin-top:50px;
 }
-
 .reel{
-  width:90px;
-  height:90px;
-  background:#000;
+  width:90px; height:90px;
+  background:black;
   border:4px solid gold;
   border-radius:15px;
   display:flex;
-  align-items:center;
-  justify-content:center;
+  align-items:center; justify-content:center;
   font-size:60px;
-  box-shadow:0 0 15px gold;
+  box-shadow:0 0 20px gold;
 }
-
-/* SPIN BUTTON */
 #spinBtn{
-  position:absolute;
-  bottom:40px;
-  padding:15px 40px;
+  position:absolute; bottom:30px;
+  padding:15px 50px;
   font-size:22px;
-  background:red;
-  border:none;
-  border-radius:50px;
-  color:white;
-  font-weight:bold;
+  background:red; border:none;
+  border-radius:50px; color:white; font-weight:bold;
   box-shadow:0 0 15px gold;
 }
-
-/* REGISTER FORM */
-#formScreen{
-  width:100vw;
-  height:100vh;
-  background:black;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-
-input{
-  padding:12px;
-  margin:6px;
-  width:250px;
-  border-radius:5px;
-  border:none;
-  font-size:16px;
-}
-
-button{
-  padding:12px 30px;
-  background:red;
-  color:white;
-  border:none;
-  border-radius:20px;
-  font-size:18px;
+#bonus{
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.9);
+  color:gold;
+  display:none; align-items:center; justify-content:center;
+  font-size:40px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- FORM REGISTER -->
-<div id="formScreen">
-<h2 style="color:gold;">BANJAR RAYA SLOT LOGIN</h2>
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
-<input id="hp" placeholder="No HP">
-<button onclick="startGame()">LOGIN DEMO</button>
-</div>
+<div id="gameScreen">
 
-<!-- FULL SCREEN GAME -->
-<div id="gameScreen" style="display:none;">
-<div id="topBar">💰 Saldo Demo: <span id="saldo">10000</span> Koin</div>
+<div id="topBar">💰 Saldo Demo: <span id="saldo">100000</span> Koin</div>
 
 <div id="reels">
-<div class="reel" id="r1">🍒</div>
-<div class="reel" id="r2">🍋</div>
-<div class="reel" id="r3">🔔</div>
+  <div class="reel" id="r1">🍒</div>
+  <div class="reel" id="r2">🍋</div>
+  <div class="reel" id="r3">🔔</div>
 </div>
 
 <button id="spinBtn" onclick="spin()">🎰 SPIN</button>
+
 </div>
 
-<script>
-function startGame(){
- if(!user.value||!pass.value||!hp.value){alert("Isi data dulu");return;}
- formScreen.style.display="none";
- gameScreen.style.display="flex";
-}
+<div id="bonus">🎉 BONUS FREE SPIN 🎉</div>
 
-/* SLOT ENGINE */
-let simbol=["🍒","🍋","🔔","💎","🍉","7️⃣","⭐"];
+<audio id="spinSound" src="https://www.soundjay.com/mechanical/slot-machine-1.mp3"></audio>
+<audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+<script>
+let simbol=["🍒","🍋","🔔","💎","7️⃣","⭐"];
+
+function randomSymbol(){ return simbol[Math.floor(Math.random()*simbol.length)]; }
+
 function spin(){
  let saldo=parseInt(saldo.innerHTML);
- saldo-=100;
+ saldo-=500;
+ if(saldo<=0) saldo=100000;
 
- let anim=setInterval(()=>{
-  r1.innerHTML=simbol[Math.random()*simbol.length|0];
-  r2.innerHTML=simbol[Math.random()*simbol.length|0];
-  r3.innerHTML=simbol[Math.random()*simbol.length|0];
+ spinSound.play();
+
+ let interval=setInterval(()=>{
+  r1.innerHTML=randomSymbol();
+  r2.innerHTML=randomSymbol();
+  r3.innerHTML=randomSymbol();
  },80);
 
  setTimeout(()=>{
-  clearInterval(anim);
+  clearInterval(interval);
+
+  // Jackpot
   if(r1.innerHTML==r2.innerHTML && r2.innerHTML==r3.innerHTML){
+    winSound.play();
     alert("🔥 JACKPOT BANJAR RAYA 🔥");
-    saldo+=10000;
+    saldo+=50000;
   }
-  if(saldo<=0) saldo=10000;
+
+  // Bonus random
+  if(Math.random()<0.05){
+    bonus.style.display="flex";
+    setTimeout(()=>bonus.style.display="none",3000);
+  }
+
   document.getElementById("saldo").innerHTML=saldo;
  },2000);
 }
